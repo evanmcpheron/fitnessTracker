@@ -11,6 +11,10 @@ const port = process.env.PORT || 5000;
 app.use(express.json({ extended: false }));
 app.use(cors());
 
+app.get('/', (req, res) => {
+  res.send('HELLO! Welcome to the Fierro Fitness API');
+});
+
 // app.set('view engine', 'pug');
 // app.set('views', path.join(__dirname, 'views'));
 
