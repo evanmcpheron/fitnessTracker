@@ -13,5 +13,5 @@ app.use('/api/user', require('./routes/user'));
 app.use('/api/email', require('./routes/email'));
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log('App listening on port 3000!');
+  console.log(`App listening on port ${process.env.PORT}!`);
 });
