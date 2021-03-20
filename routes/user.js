@@ -10,7 +10,7 @@ const User = require('../models/Users');
 // @route    GET api/auth
 // @desc     Test route
 // @access   Private
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const user = await User.find().select('-password');
     res.json(user);
