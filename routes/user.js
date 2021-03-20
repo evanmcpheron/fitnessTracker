@@ -9,8 +9,8 @@ const User = require('../models/Users');
 
 // @route    GET api/auth
 // @desc     Test route
-// @access   Public
-router.get('/', auth, async (req, res) => {
+// @access   Private
+router.get('/', async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
     res.json(user);
@@ -23,7 +23,7 @@ router.get('/', auth, async (req, res) => {
 // @route    POST api/users
 // @desc     Register user
 // @access   Public
-router.post('/signup', async (req, res) => {
+router.post('/register', async (req, res) => {
   const { fName, lName, email, password } = req.body;
   try {
     let user = await User.findOne({ email });
@@ -69,8 +69,6 @@ router.post('/login', async (req, res) => {
   try {
     let user = await User.findOne({ email });
 
-    console.log(req);
-
     if (!user) {
       return res
         .status(400)
@@ -95,6 +93,42 @@ router.post('/login', async (req, res) => {
       if (err) throw err;
       res.json({ token });
     });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route    DELETE api/users
+// @desc     Delete user
+// @access   Private
+
+router.delete('/', auth, async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    let user = await User.findOne({ email });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ errors: [{ message: 'Your password is incorrect.' }] });
+    }
+
+    const payload = {
+      user: {
+        id: user.id,
+      },
+    };
+
+    if (isMatch) {
+      User.findOneAndDelete(email, (err, docs) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.status(200).json({ message: 'Your account was successfully deleted.' });
+        }
+      });
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
