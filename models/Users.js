@@ -51,6 +51,10 @@ const UserSchema = new mongoose.Schema({
       default: [],
     },
   },
+  stripID: {
+    type: String,
+    default: '',
+  },
   meals: {
     type: Array,
     default: [],
