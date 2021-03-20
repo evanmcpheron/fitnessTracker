@@ -10,10 +10,17 @@ const User = require('../models/Users');
 // @route    GET api/auth
 // @desc     Test route
 // @access   Private
-router.get('/', async (req, res) => {
+router.get('/:page/:limit', async (req, res) => {
   try {
     const user = await User.find().select('-password');
-    res.json(user);
+
+    //LIMIT = NUMBER OF ITEMS PER PAGE
+    //PAGE = PAGE NUMBER
+
+    const { page, limit } = req.params;
+    const startNumber = page * limit - limit;
+    const endNumber = page * limit;
+    res.send({ length: user.length, page, limit, user: user.slice(startNumber, endNumber) });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
