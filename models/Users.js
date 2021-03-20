@@ -19,7 +19,8 @@ const UserSchema = new mongoose.Schema({
       inches: { type: Number, default: 0 },
     },
     weight: { type: Number, default: 0.0 },
-    Gender: { type: String, default: '' },
+    gender: { type: String, default: '' },
+    age: { type: Number, default: 0 },
   },
   password: {
     type: String,
@@ -51,7 +52,7 @@ const UserSchema = new mongoose.Schema({
       default: [],
     },
   },
-  stripID: {
+  stripId: {
     type: String,
     default: '',
   },

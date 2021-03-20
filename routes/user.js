@@ -16,7 +16,12 @@ router.get('/', async (req, res) => {
     const excludedField = ['page', 'sort', 'limit', 'fields'];
     excludedField.forEach((el) => delete queryObj[el]);
 
-    const query = User.find(queryObj).select('-password');
+    // ADVANCED FILTERING
+    let queryStr = JSON.stringify(queryObj);
+
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
+    const query = User.find(JSON.parse(queryStr)).select('-password');
 
     const user = await query;
 
@@ -60,7 +65,7 @@ router.post('/register', async (req, res) => {
 
     jwt.sign(payload, process.env.JSON_WEB_TOKEN, { expiresIn: 360000 }, (err, token) => {
       if (err) throw err;
-      res.json({ token });
+      res.json({ user, token });
     });
   } catch (err) {
     console.error(err.message);
@@ -98,7 +103,7 @@ router.post('/login', async (req, res) => {
 
     jwt.sign(payload, process.env.JSON_WEB_TOKEN, { expiresIn: 360000 }, (err, token) => {
       if (err) throw err;
-      res.json({ token });
+      res.json({ user, token });
     });
   } catch (err) {
     console.error(err.message);
