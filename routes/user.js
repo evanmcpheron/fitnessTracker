@@ -10,17 +10,17 @@ const User = require('../models/Users');
 // @route    GET api/auth
 // @desc     Test route
 // @access   Private
-router.get('/:page/:limit', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const user = await User.find().select('-password');
+    const queryObj = { ...req.query };
+    const excludedField = ['page', 'sort', 'limit', 'fields'];
+    excludedField.forEach((el) => delete queryObj[el]);
 
-    //LIMIT = NUMBER OF ITEMS PER PAGE
-    //PAGE = PAGE NUMBER
+    const query = User.find(queryObj).select('-password');
 
-    const { page, limit } = req.params;
-    const startNumber = page * limit - limit;
-    const endNumber = page * limit;
-    res.send({ length: user.length, page, limit, user: user.slice(startNumber, endNumber) });
+    const user = await query;
+
+    res.send({ results: user.length, user });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
