@@ -33,6 +33,15 @@ router.get('/', async (req, res) => {
   }
 });
 
+// @route    GET api/auth
+// @desc     Get my profile
+// @access   Private
+
+router.get('/me', auth, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  res.send(user);
+});
+
 // @route    POST api/auth/profile
 // @desc     update personalSpecs for user
 // @access   Private
