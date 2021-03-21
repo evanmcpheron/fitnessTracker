@@ -52,7 +52,7 @@ const UserSchema = new mongoose.Schema({
       default: [],
     },
   },
-  stripId: {
+  stripeId: {
     type: String,
     default: '',
   },

@@ -17,6 +17,7 @@ router.get('/', async (req, res) => {
     excludedField.forEach((el) => delete queryObj[el]);
 
     // ADVANCED FILTERING
+    // for a nesting link like this "localhost:5000/api/user?personalSpecs.age[gte]=10"
     let queryStr = JSON.stringify(queryObj);
 
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
@@ -29,6 +30,45 @@ router.get('/', async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
+  }
+});
+
+// @route    POST api/auth/profile
+// @desc     update personalSpecs for user
+// @access   Private
+router.post('/profile', auth, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const {
+      height: { feet, inches },
+      weight,
+      gender,
+      age,
+    } = req.body;
+
+    // Build profile object
+    const profileFields = {};
+    profileFields.user = req.user.id;
+    if (weight) profileFields.weight = weight;
+    if (gender) profileFields.gender = gender;
+    if (age) profileFields.age = age;
+
+    let user = await User.findById(userId);
+
+    // UPDATE OBJECT TO MATCH THE MODEL TO PASS INTO UPDATE QUERY
+    const updatedField = { personalSpecs: { ...profileFields, height: { feet, inches } } };
+
+    if (user) {
+      // Update
+      user = await User.findByIdAndUpdate(userId, updatedField, {
+        new: true,
+      });
+
+      return res.status(200).send(user);
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).send({ message: 'err' });
   }
 });
 
