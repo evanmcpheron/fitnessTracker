@@ -45,9 +45,11 @@ router.get('/me',  async (req, res) => {
 // @route    POST api/auth/profile
 // @desc     update personalSpecs for user
 // @access   Private
-router.post('/profile', auth, async (req, res) => {
+router.post('/profile', async (req, res) => {
+    
     try {
-        const userId = req.user.id;
+        const userObj = await authMethod(req, res);
+        const userId = userObj.id;
         const {
             height: {feet, inches},
             weight,
