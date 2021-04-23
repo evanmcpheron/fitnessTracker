@@ -15,9 +15,6 @@ app.get('/', (req, res) => {
   res.send('HELLO! Welcome to the Fierro Fitness API');
 });
 
-// app.set('view engine', 'pug');
-// app.set('views', path.join(__dirname, 'views'));
-
 // This is the route used for all image routes.
 // Add, delete, and update images
 app.use('/api/image', require('./routes/image'));
