@@ -4,9 +4,11 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 
 router.post('/', (req, res) => {
-  const { message, subject, recipient } = req.body;
+  const { sentFrom, message, subject, recipient } = req.body;
 
   async function main() {
+
+    // Setting up the connection for what sends the email
     let transporter = nodemailer.createTransport({
       host: 'smtp.dreamhost.com',
       port: 465,
@@ -17,8 +19,10 @@ router.post('/', (req, res) => {
       },
     });
 
+    // This is the info that is being sent.
     let info = await transporter.sendMail({
-      from: '"Tyler" <evan@epoint.io>',
+      // sentFrom is what will be displayed that the recipient will see.
+      from: `${sentFrom}`,
       to: `${recipient}`,
       subject: `${subject}`,
       html: `${message}`,

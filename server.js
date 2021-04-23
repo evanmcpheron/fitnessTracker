@@ -18,8 +18,14 @@ app.get('/', (req, res) => {
 // app.set('view engine', 'pug');
 // app.set('views', path.join(__dirname, 'views'));
 
-app.use('/api/imageUpload', require('./routes/imageUpload'));
+// This is the route used for all image routes.
+// Add, delete, and update images
+app.use('/api/image', require('./routes/image'));
+
+// All routes around basic user authentication
 app.use('/api/user', require('./routes/user'));
+
+// This route is used to send emails.
 app.use('/api/email', require('./routes/email'));
 
 app.listen(port, () => {
