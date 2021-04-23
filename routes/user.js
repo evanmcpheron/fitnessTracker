@@ -11,6 +11,7 @@ const User = require('../models/Users');
 // @route    GET api/auth
 // @desc     Test route - will be used for advanced filtering and sorting to admin user search
 // @access   Private
+// USES AUTH METHOD
 router.get('/', async (req, res) => {
     try {
         const queryObj = {...req.query};
@@ -37,6 +38,7 @@ router.get('/', async (req, res) => {
 // @route    GET api/auth
 // @desc     Get my profile
 // @access   Private
+// USES AUTH METHOD
 router.get('/me',  async (req, res) => {
     const user = await authMethod(req, res);
     res.send(user);
@@ -45,10 +47,14 @@ router.get('/me',  async (req, res) => {
 // @route    POST api/auth/profile
 // @desc     update personalSpecs for user
 // @access   Private
+// USES AUTH METHOD
 router.post('/profile', async (req, res) => {
     
     try {
         const userObj = await authMethod(req, res);
+        if(userObj.message == "No token, authorization denied") {
+            res.status(401).send(userObj.message)
+        }
         const userId = userObj.id;
         const {
             height: {feet, inches},
@@ -165,7 +171,7 @@ router.post('/login', async (req, res) => {
 // @route    DELETE api/users
 // @desc     Delete user
 // @access   Private
-
+// USES AUTH METHOD
 router.delete('/', auth, async (req, res) => {
     const {email, password} = req.body;
     try {
