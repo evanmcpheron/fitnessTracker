@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const auth = require('../middleware/auth');
+const authMethod = require('../middleware/auth2')
 const jwt = require('jsonwebtoken');
 require('dotenv').config({path: './.env'});
 
@@ -36,8 +37,8 @@ router.get('/', async (req, res) => {
 // @route    GET api/auth
 // @desc     Get my profile
 // @access   Private
-router.get('/me', auth, async (req, res) => {
-    const user = await User.findById(req.user.id);
+router.get('/me',  async (req, res) => {
+    const user = await authMethod(req, res);
     res.send(user);
 });
 
