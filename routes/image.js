@@ -27,14 +27,15 @@ const upload = multer({storage}).single('image');
 // @access   Private
 
 // CURRENTLY AN UNTESTED ROUTE!!!
-app.post('/profile',auth, upload, async (req, res) => {
+app.post('/profile', upload,(req, res) =>
+{
 
 
-  let user = await User.findOne(req.user.id);
+    // let user = await User.findOne(req.user.id);
 
-  console.log(user);
+    console.log(user);
 
-  let myFile = req.file.originalname.split('.');
+    let myFile = req.file.originalname.split('.');
     const fileType = myFile[myFile.length - 1];
     const random = uuid.v4();
 
@@ -62,6 +63,8 @@ app.post('/profile',auth, upload, async (req, res) => {
         });
     }
     res.json({profile: `${random}.${fileType}`});
-});
+}
+)
+;
 
 module.exports = router;
