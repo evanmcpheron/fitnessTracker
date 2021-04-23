@@ -12,7 +12,7 @@ app.use(express.json({ extended: false }));
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.send('HELLO! Welcome to the Fierro Fitness API');
+  res.send('HELLO! Welcome to the Fierro Fitness REST api v0.1.0');
 });
 
 // This is the route used for all image routes.
