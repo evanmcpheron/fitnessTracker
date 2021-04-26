@@ -4,7 +4,7 @@ const app = express();
 const connectDB = require('./config/db');
 const cors = require('cors');
 
-const auth = require('./middleware/auth2');
+const auth = require('./middleware/auth');
 const jwt = require('jsonwebtoken');
 const User = require('./models/Users')
 require('dotenv').config({path: './.env'});

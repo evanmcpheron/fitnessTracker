@@ -6,7 +6,6 @@ const multer = require('multer');
 const AWS = require('aws-sdk');
 const uuid = require('uuid');
 const sharp = require('sharp');
-const auth = require('../middleware/auth');
 const User = require('../models/Users');
 
 const app = express();
@@ -27,13 +26,15 @@ const upload = multer({storage}).single('image');
 // @route    POST api/image/profile
 // @desc     Uploads an image
 // @access   Private
-
+// USES AUTH METHOD
 
 
 // CURRENTLY AN UNTESTED ROUTE!!!
 app.post('/profile', upload, async (req, res, next) => {
 		
+		const userAuth = await auth(req, res);
 		
+		const user = await User.findById(userAuth.id);
 		
 		let myFile = req.file.originalname.split('.');
 		const fileType = myFile[myFile.length - 1];
@@ -62,9 +63,61 @@ app.post('/profile', upload, async (req, res, next) => {
 				console.log(data);
 			});
 		}
+		
+		user.findByIdAndUpdate(user.id, {profilePic: `${random}.${fileType}`}, {
+			new: true,
+		})
+		
 		res.json({profile: `${random}.${fileType}`});
 	}
-)
-;
+);
+
+// @route    POST api/image/front
+// @desc     Uploads an image for front update pic
+// @access   Private
+// USES AUTH METHOD
+
+
+// CURRENTLY AN UNTESTED ROUTE!!!
+
+app.post('/front', upload, async (req, res) => {
+
+})
+
+// @route    POST api/image/back
+// @desc     Uploads an image for front update pic
+// @access   Private
+// USES AUTH METHOD
+
+
+// CURRENTLY AN UNTESTED ROUTE!!!
+
+app.post('/back', upload, async (req, res) => {
+
+})
+
+// @route    POST api/image/left
+// @desc     Uploads an image for front update pic
+// @access   Private
+// USES AUTH METHOD
+
+
+// CURRENTLY AN UNTESTED ROUTE!!!
+
+app.post('/left', upload, async (req, res) => {
+
+})
+
+// @route    POST api/image/right
+// @desc     Uploads an image for front update pic
+// @access   Private
+// USES AUTH METHOD
+
+
+// CURRENTLY AN UNTESTED ROUTE!!!
+
+app.post('/right', upload, async (req, res) => {
+
+})
 
 module.exports = router;

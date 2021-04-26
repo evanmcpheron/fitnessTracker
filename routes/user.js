@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const auth = require('../middleware/auth');
-const authMethod = require('../middleware/auth2')
+const auth = require('../middleware/auth')
 const jwt = require('jsonwebtoken');
 require('dotenv').config({path: './.env'});
 
@@ -40,7 +39,7 @@ router.get('/', async (req, res) => {
 // @access   Private
 // USES AUTH METHOD
 router.get('/me',  async (req, res) => {
-    const user = await authMethod(req, res);
+    const user = await auth(req, res);
     res.send(user);
 });
 
@@ -51,7 +50,7 @@ router.get('/me',  async (req, res) => {
 router.post('/profile', async (req, res) => {
     
     try {
-        const userObj = await authMethod(req, res);
+        const userObj = await auth(req, res);
         if(userObj.message == "No token, authorization denied") {
             res.status(401).send(userObj.message)
         }
@@ -83,6 +82,7 @@ router.post('/profile', async (req, res) => {
 
             return res.status(200).send(user);
         }
+        
     } catch (err) {
         console.log(err);
         res.status(400).send({message: 'err'});
@@ -172,7 +172,9 @@ router.post('/login', async (req, res) => {
 // @desc     Delete user
 // @access   Private
 // USES AUTH METHOD
-router.delete('/', auth, async (req, res) => {
+router.delete('/', async (req, res) => {
+    await auth(req, res);
+    
     const {email, password} = req.body;
     try {
         let user = await User.findOne({email});
