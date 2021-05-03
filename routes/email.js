@@ -3,6 +3,11 @@ const router = express.Router();
 
 const nodemailer = require('nodemailer');
 
+// @route    POST api/email
+// @desc     Sends an email from admin email ()
+// @access   Private
+
+// TODO: EXPAND TO HAVE MORE FLUID FUNCTIONALITY
 router.post('/', (req, res) => {
   const { sentFrom, message, subject, recipient } = req.body;
 

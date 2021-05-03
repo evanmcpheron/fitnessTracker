@@ -7,7 +7,7 @@ require('dotenv').config({path: './.env'});
 
 const User = require('../models/Users');
 
-// @route    GET api/auth
+// @route    GET api/user
 // @desc     Test route - will be used for advanced filtering and sorting to admin user search
 // @access   Private
 // USES AUTH METHOD
@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// @route    GET api/user
+// @route    GET api/user/me
 // @desc     Get my profile
 // @access   Private
 // USES AUTH METHOD
@@ -44,7 +44,7 @@ router.get('/me',  async (req, res) => {
     res.send(user);
 });
 
-// @route    POST api/auth/profile
+// @route    POST api/user/profile
 // @desc     update personalSpecs for user
 // @access   Private
 // USES AUTH METHOD
@@ -105,7 +105,7 @@ router.post('/profile', async (req, res) => {
     }
 });
 
-// @route    POST api/users
+// @route    POST api/user/register
 // @desc     Register user
 // @access   Public
 router.post('/register', async (req, res) => {
@@ -146,7 +146,7 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// @route    POST api/auth
+// @route    POST api/user/login
 // @desc     Authenticate user & get token
 // @access   Public
 router.post('/login', async (req, res) => {
@@ -184,7 +184,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// @route    DELETE api/users
+// @route    DELETE api/user
 // @desc     Delete user
 // @access   Private
 // USES AUTH METHOD
