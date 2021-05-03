@@ -49,7 +49,7 @@ router.get('/me',  async (req, res) => {
 // @access   Private
 // USES AUTH METHOD
 router.post('/profile', async (req, res) => {
-    
+
     try {
         const userObj = await auth(req, res);
         if(userObj.message == "No token, authorization denied") {
@@ -59,16 +59,31 @@ router.post('/profile', async (req, res) => {
         const {
             height: {feet, inches},
             weight,
+            waist,
             gender,
             age,
         } = req.body;
 
         // Build profile object
-        const profileFields = {};
+        const profileFields = {weight:[],waist:[]};
         profileFields.user = req.user.id;
-        if (weight) profileFields.weight = weight;
+        if(feet) profileFields.feet = feet;
+        if(inches) profileFields.inches = inches;
         if (gender) profileFields.gender = gender;
         if (age) profileFields.age = age;
+
+        if(userObj.personalSpecs.weight.length !== 0) {
+            profileFields.weight[0] = userObj.personalSpecs.weight[0];
+            profileFields.weight[1] = weight;
+        } else if(weight) {
+            profileFields.weight[0] = weight;
+        }
+        if(userObj.personalSpecs.waist.length !== 0) {
+            profileFields.waist[0] = userObj.personalSpecs.waist[0];
+            profileFields.waist[1] = waist;
+        } else if(waist) {
+            profileFields.waist[0] = waist;
+        }
 
         let user = await User.findById(userId);
 
@@ -83,7 +98,7 @@ router.post('/profile', async (req, res) => {
 
             return res.status(200).send(user);
         }
-        
+
     } catch (err) {
         console.log(err);
         res.status(400).send({message: 'err'});
@@ -175,7 +190,7 @@ router.post('/login', async (req, res) => {
 // USES AUTH METHOD
 router.delete('/', async (req, res) => {
     await auth(req, res);
-    
+
     const {email, password} = req.body;
     try {
         let user = await User.findOne({email});
