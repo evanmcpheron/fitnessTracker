@@ -34,12 +34,13 @@ router.get('/', async (req, res) => {
     }
 });
 
-// @route    GET api/auth
+// @route    GET api/user
 // @desc     Get my profile
 // @access   Private
 // USES AUTH METHOD
 router.get('/me',  async (req, res) => {
     const user = await auth(req, res);
+    console.log(user)
     res.send(user);
 });
 
